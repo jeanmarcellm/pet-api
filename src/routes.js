@@ -9,6 +9,7 @@ import StoreController from './app/controllers/StoreController';
 import PetTypeController from './app/controllers/PetTypeController';
 import BreedController from './app/controllers/BreedController';
 import PetController from './app/controllers/PetController';
+import ServiceTypeController from './app/controllers/ServiceTypeController';
 import Auth from './app/middlewares/auth';
 
 const routes = new Router();
@@ -36,6 +37,9 @@ routes.get('/store/:store_id', asyncHandler(StoreController.find));
 // routes.put('/faq/:faq_id', Auth.verify, asyncHandler(FaqController.update));
 // routes.delete('/faq/bulk', Auth.verify, asyncHandler(FaqController.bulkDestroy));
 
+//Service type
+routes.get('/service_type',asyncHandler(ServiceTypeController.index))
+routes.post('/service_type',asyncHandler(ServiceTypeController.store))
 
 // petType
 routes.get('/pet_type', asyncHandler(PetTypeController.index));
