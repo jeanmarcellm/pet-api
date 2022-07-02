@@ -1,35 +1,37 @@
 import Sequelize, { Model } from 'sequelize';
-import Address from './address';
 import Image from './image';
-import Service from './service';
+import Store from './store';
+import ServiceType from './service_types';
 
-class Store extends Model {
+class Service extends Model {
   static init(sequelize) {
     super.init(
       {
         name: Sequelize.STRING,
-        description: Sequelize.STRING,
+        description:Sequelize.STRING,
+        price:Sequelize.DOUBLE
       },
       {
         sequelize,
-        modelName: 'store',
+        modelName: 'service',
         defaultScope: {
-          include: [Image,Address,Service],
+          include: [Image, ServiceType],
           attributes: { exclude: ['imageId', 'deleted_at'] },
         }, 
       }
     );
 
     
+
     return this;
   }
 
-
+  
   static associate(models) {
-    this.belongsTo(Image);
-    this.belongsTo(Address);  
-    this.hasMany(Service);
+    this.belongsTo(Image);  
+    this.belongsTo(Store);
+    this.belongsTo(ServiceType)
   }  
 }
 
-export default Store;
+export default Service;

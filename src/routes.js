@@ -10,6 +10,8 @@ import PetTypeController from './app/controllers/PetTypeController';
 import BreedController from './app/controllers/BreedController';
 import ServiceTypeController from './app/controllers/ServiceTypeController';
 import Auth from './app/middlewares/auth';
+import Service from './app/models/service';
+import ServiceController from './app/controllers/ServiceController';
 
 const routes = new Router();
 
@@ -49,5 +51,8 @@ routes.get('/pet_type/:pet_type_id', asyncHandler(PetTypeController.find));
 routes.get('/breed', asyncHandler(BreedController.index));
 routes.post('/breed', asyncHandler(BreedController.store));
 routes.get('/breed/:breed_id', asyncHandler(BreedController.find));
+
+//Service
+routes.post('/service', asyncHandler(ServiceController.store));
 
 export default routes;
