@@ -38,8 +38,8 @@ routes.get('/store/:store_id', asyncHandler(StoreController.find));
 // routes.delete('/faq/bulk', Auth.verify, asyncHandler(FaqController.bulkDestroy));
 
 //Service type
-routes.get('/service_type',asyncHandler(ServiceTypeController.index));
-routes.post('/service_type',asyncHandler(ServiceTypeController.store));
+routes.get('/service_type',asyncHandler(ServiceTypeController.index))
+routes.post('/service_type',asyncHandler(ServiceTypeController.store))
 
 // petType
 routes.get('/pet_type', asyncHandler(PetTypeController.index));
@@ -55,6 +55,7 @@ routes.get('/breed/:breed_id', asyncHandler(BreedController.find));
 routes.get('/pet', asyncHandler(PetController.index));
 routes.post('/pet', asyncHandler(PetController.store));
 routes.get('/pet/:pet_id', asyncHandler(PetController.find));
+routes.delete('/pet/:pet_id', asyncHandler(PetController.destroy));
 
 
 export default routes;
