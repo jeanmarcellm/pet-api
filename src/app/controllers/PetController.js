@@ -198,6 +198,20 @@ class PetController {
 
     return res.status(200).json({ message: 'pet deletado' });
   }
+
+  async getPetById(req, res) {
+    const id = req.params.pet_id;
+
+    var pet = await Pet.findByPk(id);
+
+    if (!pet) {
+      return res
+        .status(404)
+        .json({ message: 'pet não encontrado' });
+    }
+
+    return res.status(200).json(pet);
+  }
 }
 
 export default new PetController();
