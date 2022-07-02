@@ -1,13 +1,13 @@
 import FilterParser from '../services/FilterParser';
 import * as Yup from 'yup';
+import Breed from '../models/breed';
 import PetType from '../models/pet_type';
-import Image from '../models/image';
 
-class PetTypeController {
+class BreedController {
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      image: Yup.object().shape({
+      pet_type: Yup.object().shape({
         data: Yup.string().notRequired(),
       }),
     });
@@ -18,41 +18,41 @@ class PetTypeController {
       return res.status(400).json({ message: e.errors[0] });
     }
 
-    const { name, image } = req.body;
+    const { name, pet_type } = req.body;
 
     var includes = [];
 
-    if (image) {
-      includes.push(Image);
+    if (pet_type) {
+      includes.push(PetType);
     }
 
-    var petType = await PetType.create({
+    var breed = await Breed.create({
       name,
-      image,
+      pet_type,
     },
     {include:includes});
 
-    petType = await PetType.findByPk(petType.id);
+    breed = await Breed.findByPk(breed.id);
 
-    return res.status(200).json(petType);
+    return res.status(200).json(breed);
   }
 
   async find(req, res) {
-    const id = req.params.pet_type_id;
+    const id = req.params.breed_id;
 
-    let petType = await PetType.findOne({
+    let breed = await Breed.findOne({
       where: {
         id,
       },
     });
 
-    if (!petType) {
+    if (!breed) {
       return res
         .status(404)
         .json({ message: 'Pergunta frequente não encontrada' });
     }
 
-    return res.status(200).json(petType);
+    return res.status(200).json(breed);
   }
 
   async index(req, res) {
@@ -75,7 +75,7 @@ class PetTypeController {
       where = FilterParser.replacer(where);
     }
 
-    var petTypes = await PetType.findAll({
+    var breed = await Breed.findAll({
       limit,
       offset,
       order,
@@ -83,13 +83,13 @@ class PetTypeController {
       subQuery: false,
     });
 
-    return res.status(200).json(petTypes);
+    return res.status(200).json(breed);
   }
 
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().notRequired(),
-      image: Yup.object().shape({
+      pet_type: Yup.object().shape({
         data: Yup.string().notRequired(),
       }),
     });
@@ -100,9 +100,9 @@ class PetTypeController {
       return res.status(400).json({ message: e.errors[0] });
     }
 
-    var petType = await PetType.findByPk(req.params.petType_id);
+    var breed = await Breed.findByPk(req.params.breed_id);
 
-    if (!petType) {
+    if (!breed) {
       return res
         .status(404)
         .json({ message: 'Pergunta frequente não encontrado' });
@@ -110,31 +110,31 @@ class PetTypeController {
 
     const { title, description } = req.body;
 
-    petType = await petType.update({
+    breed = await breed.update({
       name,
-      image,
+      pet_type,
     });
 
-    petType = await PetType.findByPk(petType.id);
+    breed = await Breed.findByPk(breed.id);
 
-    return res.status(200).json(petType);
+    return res.status(200).json(breed);
   }
 
   async bulkDestroy(req, res) {
     const bulk = JSON.parse(req.query.bulk);
 
-    var petTypes = await PetType.findAll({ where: { id: bulk } });
+    var breed = await Breed.findAll({ where: { id: bulk } });
 
     var successes = [];
     var errors = [];
 
-    for (var i = 0; i < petTypes.length; i++) {
-      var petType = petTypes[i];
+    for (var i = 0; i < breed.length; i++) {
+      var breed = breed[i];
       var messages = [];
 
       var data = {
-        id: petType.id,
-        name: petType.title,
+        id: breed.id,
+        name: breed.title,
         messages,
       };
 
@@ -149,10 +149,10 @@ class PetTypeController {
       return e.id;
     });
 
-    await PetType.destroy({ where: { id: ids } });
+    await Breed.destroy({ where: { id: ids } });
 
     return res.status(200).json({ errors, successes });
   }
 }
 
-export default new PetTypeController();
+export default new BreedController();

@@ -4,10 +4,19 @@ import Image from '../app/models/image';
 import Store from '../app/models/store';
 import User from '../app/models/user';
 import PetType from '../app/models/pet_type'; 
+import Breed from '../app/models/breed';
 
 import databaseConfig from '../config/database';
 
-const models = [Address, User, Image, Store, PetType];
+const models = 
+[
+  Address, 
+  User, 
+  Image, 
+  Store, 
+  PetType,
+  Breed,
+];
 
 class Database {
   constructor() {
