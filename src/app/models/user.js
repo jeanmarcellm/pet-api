@@ -19,6 +19,11 @@ class User extends Model {
           include: [Image],
           attributes: { exclude: ['imageId', 'deleted_at'] },
         }, 
+        scopes: {
+          withoutPassword: {
+            attributes: { exclude: ['password_hash'] }
+          }
+        }
       }
     );
 

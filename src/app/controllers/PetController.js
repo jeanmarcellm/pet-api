@@ -2,7 +2,6 @@ import FilterParser from '../services/FilterParser';
 import * as Yup from 'yup';
 import Pet from '../models/pet';
 import Breed from '../models/breed';
-import User from '../models/user';
 import Image from '../models/image';
 
 class PetController {
@@ -26,7 +25,7 @@ class PetController {
       return res.status(400).json({ message: e.errors[0] });
     }
 
-    const { name, image, breed, user } = req.body;
+    const { name, image, breed, user_id } = req.body;
 
     var includes = [];
 
@@ -34,18 +33,18 @@ class PetController {
       includes.push(Image);
     }
     if (breed) {
-        includes.push(Breed);
-      }
-      if (user) {
-        includes.push(User);
-      }
+      includes.push(Breed);
+    }
 
-    var pet = await Pet.create({
-      name,
-      image,
-      breed,
-      user
-    },{include:includes});
+    var pet = await Pet.create(
+      {
+        name,
+        image,
+        breed,
+        userId: user_id,
+      },
+      { include: includes }
+    );
 
     pet = await Pet.findByPk(pet.id);
 
@@ -62,9 +61,7 @@ class PetController {
     });
 
     if (!pet) {
-      return res
-        .status(404)
-        .json({ message: 'Pergunta frequente não encontrada' });
+      return res.status(404).json({ message: 'Pet não encontrada' });
     }
 
     return res.status(200).json(pet);
@@ -103,17 +100,17 @@ class PetController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-        name: Yup.string().required(),
-        image: Yup.object().shape({
-          data: Yup.string().notRequired(),
-        }),
-        breed: Yup.object().shape({
-          data: Yup.string().notRequired(),
-        }),
-        user: Yup.object().shape({
-          data: Yup.string().notRequired(),
-        }),
-      });
+      name: Yup.string().required(),
+      image: Yup.object().shape({
+        data: Yup.string().notRequired(),
+      }),
+      breed: Yup.object().shape({
+        data: Yup.string().notRequired(),
+      }),
+      user: Yup.object().shape({
+        data: Yup.string().notRequired(),
+      }),
+    });
 
     try {
       await schema.validate(req.body);
@@ -124,9 +121,7 @@ class PetController {
     var pet = await Pet.findByPk(req.params.pet_id);
 
     if (!pet) {
-      return res
-        .status(404)
-        .json({ message: 'Pergunta frequente não encontrado' });
+      return res.status(404).json({ message: 'Pet não encontrado' });
     }
 
     const { name } = req.body;
@@ -189,9 +184,7 @@ class PetController {
     var pet = await Pet.findByPk(id);
 
     if (!pet) {
-      return res
-        .status(404)
-        .json({ message: 'pet não encontrado' });
+      return res.status(404).json({ message: 'pet não encontrado' });
     }
 
     await pet.destroy();
@@ -205,9 +198,7 @@ class PetController {
     var pet = await Pet.findByPk(id);
 
     if (!pet) {
-      return res
-        .status(404)
-        .json({ message: 'pet não encontrado' });
+      return res.status(404).json({ message: 'pet não encontrado' });
     }
 
     return res.status(200).json(pet);

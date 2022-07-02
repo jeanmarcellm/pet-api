@@ -11,6 +11,7 @@ import databaseConfig from '../config/database';
 import Service from '../app/models/service';
 import Pet from '../app/models/pet';
 import Status from '../app/models/status';
+import UserServices from '../app/models/user_services';
 
 const models = 
 [
@@ -23,7 +24,8 @@ const models =
   ServiceType,
   Service,
   Pet,
-  Status
+  Status,
+  UserServices
 ];
 
 class Database {

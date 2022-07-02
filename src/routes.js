@@ -11,9 +11,9 @@ import BreedController from './app/controllers/BreedController';
 import PetController from './app/controllers/PetController';
 import ServiceTypeController from './app/controllers/ServiceTypeController';
 import Auth from './app/middlewares/auth';
-import Service from './app/models/service';
 import ServiceController from './app/controllers/ServiceController';
 import StatusController from './app/controllers/StatusController';
+import UserServicesController from './app/controllers/UserServicesController';
 
 const routes = new Router();
 
@@ -41,8 +41,8 @@ routes.get('/store/:store_id', asyncHandler(StoreController.find));
 // routes.delete('/faq/bulk', Auth.verify, asyncHandler(FaqController.bulkDestroy));
 
 //Service type
-routes.get('/service_type',asyncHandler(ServiceTypeController.index))
-routes.post('/service_type',asyncHandler(ServiceTypeController.store))
+routes.get('/service_type',asyncHandler(ServiceTypeController.index));
+routes.post('/service_type',asyncHandler(ServiceTypeController.store));
 
 // petType
 routes.get('/pet_type', asyncHandler(PetTypeController.index));
@@ -68,4 +68,10 @@ routes.get('/status', asyncHandler(StatusController.index));
 routes.post('/status', asyncHandler(StatusController.store));
 routes.get('/status/:status_id', asyncHandler(StatusController.find));
 
+//User services
+routes.post('/payment', asyncHandler(UserServicesController.store));
+routes.get('/user_services', asyncHandler(UserServicesController.index));
+routes.get('/user_services/:user_services_id', asyncHandler(UserServicesController.find));
+routes.put('/user_services', asyncHandler(UserServicesController.update));
+routes.delete('/user_services/:user_services_id', asyncHandler(UserServicesController.destroy));
 export default routes;

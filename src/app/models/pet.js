@@ -13,7 +13,7 @@ class Pet extends Model {
         sequelize,
         modelName: 'pet',
         defaultScope: {
-            include: [Breed, Image, User],
+            include: [Breed, Image, User.scope('withoutPassword')],
           attributes: { 
             exclude: ['deleted_at'],
           },

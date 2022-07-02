@@ -18,6 +18,12 @@ class Service extends Model {
           include: [Image, ServiceType],
           attributes: { exclude: ['imageId', 'deleted_at'] },
         }, 
+        scopes: {
+          withStore: {
+            include: [Image, ServiceType, Store],
+            cattributes: { exclude: ['imageId', 'deleted_at'] },
+          }
+        }
       }
     );
     return this;

@@ -2,8 +2,9 @@ import Sequelize, { Model } from 'sequelize';
 import bcrypt from 'bcryptjs';
 import Status from './status'
 import Service from './service';
+import User from './user';
 
-class User extends Model {
+class UserService extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -11,30 +12,24 @@ class User extends Model {
       },
       {
         sequelize,
-        modelName: 'user',
+        modelName: 'user_service',
         defaultScope: {
-          include: [User, Service, Status],
-          attributes: { exclude: ['imageId', 'deleted_at'] },
+          include: [User.scope('withoutPassword'), Service, Status],
+          attributes: { exclude: ['deleted_at'] },
         }, 
       }
     );
 
-    this.addHook('beforeSave', async (user) => {
-      if (user.password) {
-        user.password_hash = await bcrypt.hash(user.password, 8);
-      }
-    });
 
     return this;
   }
 
-  checkPassword(password) {
-    return bcrypt.compare(password, this.password_hash);
-  }
 
-  static associate(models) {
-    this.belongsTo(Image);  
+  static associate(models) { 
+    this.belongsTo(User)
+    this.belongsTo(Service) 
+    this.belongsTo(Status) ;
   }  
 }
 
-export default User;
+export default UserService;
