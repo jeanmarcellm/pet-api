@@ -8,7 +8,7 @@ module.exports = {
   database: process.env.DB_NAME,
   logging: false,
   dialectOptions: {
-    ssl: true,
+    ssl: false,
   },
   define: {
     timestamps: true,
