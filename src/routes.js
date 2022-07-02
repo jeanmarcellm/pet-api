@@ -24,4 +24,12 @@ routes.put('/user/:user_id', asyncHandler(UserController.update));
 routes.delete('/user/bulk', Auth.verify, asyncHandler(UserController.bulkDestroy));
 routes.delete('/user/:user_id', Auth.verify, asyncHandler(UserController.destroy));
 
+
+// FAQ
+// routes.get('/faq', asyncHandler(FaqController.index));
+// routes.post('/faq', Auth.verify, asyncHandler(FaqController.store));
+// routes.get('/faq/:faq_id', asyncHandler(FaqController.find));
+// routes.put('/faq/:faq_id', Auth.verify, asyncHandler(FaqController.update));
+// routes.delete('/faq/bulk', Auth.verify, asyncHandler(FaqController.bulkDestroy));
+
 export default routes;
