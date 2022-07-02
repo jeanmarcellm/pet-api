@@ -40,5 +40,22 @@ class ServiceController{
 
     return res.status(200).json(service);
   }
+
+  async destroy(req, res) {
+    const id = req.params.pet_id;
+
+    var service = await Service.findByPk(id);
+
+    if (!service) {
+      return res
+        .status(404)
+        .json({ message: 'sem serviços' });
+    }
+
+    await service.destroy();
+
+    return res.status(200).json({ message: 'serviço deletado' });
+  }
 }
+
 export default new ServiceController();
