@@ -2,10 +2,11 @@ import Sequelize from 'sequelize';
 import Address from '../app/models/address';
 import Image from '../app/models/image';
 import User from '../app/models/user';
+import PetType from '../app/models/pet_type'; 
 
 import databaseConfig from '../config/database';
 
-const models = [Address, User, Image];
+const models = [Address, User, Image, PetType];
 
 class Database {
   constructor() {
