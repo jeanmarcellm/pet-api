@@ -16,7 +16,7 @@ class User extends Model {
         sequelize,
         modelName: 'user',
         defaultScope: {
-          include: [Image, Address],
+          include: [Image],
           attributes: { exclude: ['imageId', 'deleted_at'] },
         }, 
       }

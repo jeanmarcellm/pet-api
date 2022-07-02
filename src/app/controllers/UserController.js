@@ -111,8 +111,6 @@ class UserController {
   }
 
   async find(req, res) {
-    // #swagger.tags = ['User']
-    // #swagger.security = [{ api_key: [] }]
 
     var id = req.params.user_id;
 
@@ -129,22 +127,12 @@ class UserController {
     user = user.toJSON();
 
     user.password_hash = undefined;
-    user.follow_number = await UserFollow.count({
-      where: {
-        from_user_id: user.id,
-      },
-    });
-    user.followed_number = await UserFollow.count({
-      where: {
-        to_user_id: user.id,
-      },
-    });
 
     return res.status(200).json(user);
   }
 
   async signIn(req, res) {
-    // #swagger.tags = ['User']
+    
 
     const schema = Yup.object().shape({
       email: Yup.string().required(),
@@ -164,11 +152,6 @@ class UserController {
         [Op.or]: [
           {
             email: {
-              [Op.eq]: email,
-            },
-          },
-          {
-            code: {
               [Op.eq]: email,
             },
           },
@@ -199,26 +182,6 @@ class UserController {
 
     let result = user.toJSON();
     result.token = token;
-    result.follow_number = await UserFollow.count({
-      where: {
-        from_user_id: user.id,
-      },
-    });
-
-    result.followed_number = await UserFollow.count({
-      where: {
-        to_user_id: user.id,
-      },
-    });
-
-    if (req.query.admin == 'true') {
-      result.user_type = undefined;
-      result.follow_number = undefined;
-      result.followed_number = undefined;
-
-      result = { user: result };
-      result.permissions = await getPermissions(result.user.id);
-    }
 
     return res.status(200).json(result);
   }
