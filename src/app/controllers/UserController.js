@@ -92,7 +92,7 @@ class UserController {
       where = FilterParser.replacer(where);
     }
 
-    var users = await User.findAndCountAll({
+    var users = await User.findAll({
       limit,
       offset,
       order,
