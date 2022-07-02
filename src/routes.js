@@ -11,6 +11,8 @@ import BreedController from './app/controllers/BreedController';
 import PetController from './app/controllers/PetController';
 import ServiceTypeController from './app/controllers/ServiceTypeController';
 import Auth from './app/middlewares/auth';
+import Service from './app/models/service';
+import ServiceController from './app/controllers/ServiceController';
 
 const routes = new Router();
 
@@ -51,11 +53,13 @@ routes.get('/breed', asyncHandler(BreedController.index));
 routes.post('/breed', asyncHandler(BreedController.store));
 routes.get('/breed/:breed_id', asyncHandler(BreedController.find));
 
+//Service
+routes.post('/service', asyncHandler(ServiceController.store));
+
 // pet
 routes.get('/pet', asyncHandler(PetController.index));
 routes.post('/pet', asyncHandler(PetController.store));
 routes.get('/pet/:pet_id', asyncHandler(PetController.find));
 routes.delete('/pet/:pet_id', asyncHandler(PetController.destroy));
-
 
 export default routes;
