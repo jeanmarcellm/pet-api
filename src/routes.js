@@ -6,12 +6,9 @@ const asyncHandler = require('express-async-handler');
 import UserController from './app/controllers/UserController';
 import ImageController from './app/controllers/ImageController';
 import StoreController from './app/controllers/StoreController';
-<<<<<<< HEAD
-import ServiceTypeController from './app/controllers/ServiceTypeController';
-=======
 import PetTypeController from './app/controllers/PetTypeController';
 import BreedController from './app/controllers/BreedController';
->>>>>>> fc3a98f8a81ea7a16467f1c88b8d2b3e9ec1b4ab
+import ServiceTypeController from './app/controllers/ServiceTypeController';
 import Auth from './app/middlewares/auth';
 
 const routes = new Router();
