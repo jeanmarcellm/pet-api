@@ -13,6 +13,7 @@ import ServiceTypeController from './app/controllers/ServiceTypeController';
 import Auth from './app/middlewares/auth';
 import Service from './app/models/service';
 import ServiceController from './app/controllers/ServiceController';
+import StatusController from './app/controllers/StatusController';
 
 const routes = new Router();
 
@@ -61,5 +62,10 @@ routes.get('/pet', asyncHandler(PetController.index));
 routes.post('/pet', asyncHandler(PetController.store));
 routes.get('/pet/:pet_id', asyncHandler(PetController.find));
 routes.delete('/pet/:pet_id', asyncHandler(PetController.destroy));
+
+// status
+routes.get('/status', asyncHandler(StatusController.index));
+routes.post('/status', asyncHandler(StatusController.store));
+routes.get('/status/:status_id', asyncHandler(StatusController.find));
 
 export default routes;
