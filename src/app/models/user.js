@@ -17,7 +17,7 @@ class User extends Model {
         modelName: 'user',
         defaultScope: {
           include: [Image, Address],
-          attributes: { exclude: ['addressId', 'imageId', 'deleted_at'] },
+          attributes: { exclude: ['imageId', 'deleted_at'] },
         }, 
       }
     );
@@ -36,7 +36,6 @@ class User extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(Address);
     this.belongsTo(Image);  
   }  
 }

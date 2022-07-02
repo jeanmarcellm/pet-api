@@ -33,34 +33,12 @@ class UserController {
         .json({ message: 'Existe outra conta com esse email' });
     }
 
-    if (req.body.code) {
-      user = await User.findOne({ where: { code: req.body.code } });
-
-      if (user) {
-        return res
-          .status(400)
-          .json({ message: 'Existe outra conta com esse código de acesso' });
-      }
-    }
-
     let {
-      first_name,
-      last_name,
-      cpf,
-      rg,
+      name,
       email,
       password,
-      phone,
-      user_type_id,
-      store_id,
-      code,
-      address,
       image,
     } = req.body;
-
-    if (!user_type_id) {
-      user_type_id = 2;
-    }
 
     var includes = [];
 
@@ -68,25 +46,11 @@ class UserController {
       includes.push(Image);
     }
 
-    if (address) {
-      includes.push(Address);
-    }
-
     user = await User.create(
       {
-        first_name,
-        last_name,
-        cpf,
-        address,
-        rg,
+        name,
         email,
         password,
-        storeId: store_id,
-        phone,
-        code,
-        privacyPolicyId: 2,
-        termUseId: 2,
-        userTypeId: user_type_id,
         image,
       },
       {
@@ -95,19 +59,7 @@ class UserController {
     );
 
     user = await User.findByPk(user.id);
-
-    user = user.toJSON();
     user.password_hash = undefined;
-    user.follow_number = await UserFollow.count({
-      where: {
-        from_user_id: user.id,
-      },
-    });
-    user.followed_number = await UserFollow.count({
-      where: {
-        to_user_id: user.id,
-      },
-    });
 
     return res.status(200).json(user);
   }
@@ -365,19 +317,6 @@ class UserController {
     return res.status(200).json(user);
   }
 
-  async userTypes(req, res) {
-    // #swagger.tags = ['User']
-    // #swagger.security = [{ api_key: [] }]
-
-    if (!auth.check(req.user, ['admin'])) {
-      return res.status(401).json({ message: 'Não autorizado' });
-    }
-
-    let user_types = await UserType.findAll();
-
-    return res.status(200).json(user_types);
-  }
-
   async destroy(req, res) {
     // #swagger.tags = ['User']
     // #swagger.security = [{ api_key: [] }]
@@ -416,92 +355,5 @@ class UserController {
   }
 }
 
-async function getPermissions(userId) {
-  let user_admins = await UserAdmin.scope('withoutData').findAll({
-    where: {
-      userId,
-    },
-  });
-
-  let sql = (user_admin_permission_id, store_type_id) => `
-    SELECT 
-      user_admin_features.key 
-    FROM user_admin_permission_features
-    JOIN user_admin_features ON user_admin_features.id = user_admin_permission_features.user_admin_feature_id
-    WHERE user_admin_permission_features.user_admin_permission_id = ${user_admin_permission_id}
-    AND store_type_id = ${store_type_id}
-    AND user_admin_permission_features.deleted_at IS NULL
-    AND user_admin_features.deleted_at IS NULL;      
-  `;
-
-  let permissions = [];
-
-  for (let i = 0; i < user_admins.length; i++) {
-    let user_admin = user_admins[i].toJSON();
-
-    console.log(user_admin);
-
-    let permission = {
-      key: user_admin.user_admin_permission.key,
-      permission: user_admin.user_admin_permission.name,
-      store_type: user_admin.store_place.store_type.key,
-      store_type_name: user_admin.store_place.store_type.name,
-      name: user_admin.store_place[user_admin.store_place.store_type.key].name,
-      image:
-        user_admin.store_place[user_admin.store_place.store_type.key].image,
-    };
-
-    const token = jwt.sign(
-      {
-        user: {
-          id: userId,
-        },
-        store: {
-          id: user_admin.store_place.id,
-        },
-      },
-      process.env.JWT_SECRET,
-      {}
-    );
-
-    permission.token = token;
-
-    let [results] = await db.connection.query(
-      sql(
-        user_admin.user_admin_permission.id,
-        user_admin.store_place.store_type.id
-      )
-    );
-
-    results = results.map((e) => e.key);
-
-    permission.features = results;
-
-    permissions.push(permission);
-  }
-
-  const result = [
-    ...permissions
-      .reduce((hash, obj) => {
-        let key = obj.key;
-
-        const current = hash.get(key) || {
-          key,
-          name: obj.permission,
-          stores: [],
-        };
-
-        obj.key = undefined;
-        obj.permission = undefined;
-
-        current.stores.push(obj);
-
-        return hash.set(key, current);
-      }, new Map())
-      .values(),
-  ];
-
-  return result;
-}
 
 export default new UserController();
