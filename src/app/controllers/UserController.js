@@ -111,8 +111,6 @@ class UserController {
   }
 
   async find(req, res) {
-    // #swagger.tags = ['User']
-    // #swagger.security = [{ api_key: [] }]
 
     var id = req.params.user_id;
 
@@ -129,22 +127,13 @@ class UserController {
     user = user.toJSON();
 
     user.password_hash = undefined;
-    user.follow_number = await UserFollow.count({
-      where: {
-        from_user_id: user.id,
-      },
-    });
-    user.followed_number = await UserFollow.count({
-      where: {
-        to_user_id: user.id,
-      },
-    });
+
 
     return res.status(200).json(user);
   }
 
   async signIn(req, res) {
-    // #swagger.tags = ['User']
+    
 
     const schema = Yup.object().shape({
       email: Yup.string().required(),
@@ -164,11 +153,6 @@ class UserController {
         [Op.or]: [
           {
             email: {
-              [Op.eq]: email,
-            },
-          },
-          {
-            code: {
               [Op.eq]: email,
             },
           },
@@ -199,46 +183,16 @@ class UserController {
 
     let result = user.toJSON();
     result.token = token;
-    result.follow_number = await UserFollow.count({
-      where: {
-        from_user_id: user.id,
-      },
-    });
-
-    result.followed_number = await UserFollow.count({
-      where: {
-        to_user_id: user.id,
-      },
-    });
-
-    if (req.query.admin == 'true') {
-      result.user_type = undefined;
-      result.follow_number = undefined;
-      result.followed_number = undefined;
-
-      result = { user: result };
-      result.permissions = await getPermissions(result.user.id);
-    }
 
     return res.status(200).json(result);
   }
 
   async update(req, res) {
-    // #swagger.tags = ['User']
-    // #swagger.security = [{ api_key: [] }]
 
     const schema = Yup.object().shape({
-      first_name: Yup.string().notRequired(),
-      last_name: Yup.string().notRequired(),
-      cpf: Yup.string().notRequired(),
-      rg: Yup.string().notRequired(),
-      code: Yup.string().notRequired(),
+      name: Yup.string().notRequired(),
       email: Yup.string().notRequired(),
       password: Yup.string().notRequired(),
-      phone: Yup.string().notRequired(),
-      user_type_id: Yup.number().notRequired(),
-      privacy_policy_id: Yup.number().notRequired(),
-      term_use_id: Yup.number().notRequired(),
       image: Yup.object().shape({
         data: Yup.string().notRequired(),
       }),
@@ -257,35 +211,16 @@ class UserController {
     }
 
     const {
-      first_name,
-      last_name,
-      cpf,
-      rg,
-      code,
+      name,
       email,
       password,
-      phone,
-      user_type_id,
-      store_id,
-      address,
       image,
-      privacy_policy_id,
-      term_use_id,
     } = req.body;
 
     user = await user.update({
-      first_name,
-      last_name,
-      cpf,
-      rg,
-      code,
+      name,
       email,
       password,
-      phone,
-      privacyPolicyId: privacy_policy_id,
-      termUseId: term_use_id,
-      userTypeId: user_type_id,
-      storeId: store_id,
       image,
     });
 
@@ -294,20 +229,6 @@ class UserController {
 
       await user.update({
         imageId: newImage.id,
-      });
-    }
-
-    if (address) {
-      var newAddress = await Address.findByPk(user.addressId);
-
-      if (newAddress) {
-        await newAddress.update(address);
-      } else {
-        newAddress = await Address.create(address);
-      }
-
-      await user.update({
-        addressId: newAddress.id,
       });
     }
 

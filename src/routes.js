@@ -5,6 +5,7 @@ const asyncHandler = require('express-async-handler');
 
 import UserController from './app/controllers/UserController';
 import ImageController from './app/controllers/ImageController';
+import StoreController from './app/controllers/StoreController';
 import Auth from './app/middlewares/auth';
 
 const routes = new Router();
@@ -23,5 +24,13 @@ routes.get('/user/:user_id', asyncHandler(UserController.find));
 routes.put('/user/:user_id', asyncHandler(UserController.update));
 routes.delete('/user/bulk', Auth.verify, asyncHandler(UserController.bulkDestroy));
 routes.delete('/user/:user_id', Auth.verify, asyncHandler(UserController.destroy));
+
+
+// Store
+ routes.get('/store', asyncHandler(StoreController.index));
+ routes.post('/store', asyncHandler(StoreController.store));
+ routes.get('/store/:store_id', asyncHandler(StoreController.find));
+// routes.put('/faq/:faq_id', Auth.verify, asyncHandler(FaqController.update));
+// routes.delete('/faq/bulk', Auth.verify, asyncHandler(FaqController.bulkDestroy));
 
 export default routes;
