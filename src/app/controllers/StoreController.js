@@ -83,7 +83,7 @@ class StoreController {
       where = FilterParser.replacer(where);
     }
 
-    var stores = await Store.findAndCountAll({
+    var stores = await Store.findAll({
       limit,
       offset,
       order,
