@@ -7,6 +7,7 @@ import PetType from '../app/models/pet_type';
 import Breed from '../app/models/breed';
 
 import databaseConfig from '../config/database';
+import Pet from '../app/models/pet';
 
 const models = 
 [
@@ -16,6 +17,7 @@ const models =
   Store, 
   PetType,
   Breed,
+  Pet
 ];
 
 class Database {

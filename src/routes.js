@@ -8,6 +8,7 @@ import ImageController from './app/controllers/ImageController';
 import StoreController from './app/controllers/StoreController';
 import PetTypeController from './app/controllers/PetTypeController';
 import BreedController from './app/controllers/BreedController';
+import PetController from './app/controllers/PetController';
 import Auth from './app/middlewares/auth';
 
 const routes = new Router();
@@ -45,4 +46,11 @@ routes.get('/pet_type/:pet_type_id', asyncHandler(PetTypeController.find));
 routes.get('/breed', asyncHandler(BreedController.index));
 routes.post('/breed', asyncHandler(BreedController.store));
 routes.get('/breed/:breed_id', asyncHandler(BreedController.find));
+
+// pet
+routes.get('/pet', asyncHandler(PetController.index));
+routes.post('/pet', asyncHandler(PetController.store));
+routes.get('/pet/:pet_id', asyncHandler(PetController.find));
+
+
 export default routes;
