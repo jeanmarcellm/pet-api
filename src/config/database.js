@@ -9,7 +9,10 @@ module.exports = {
   port: process.env.DB_PORT,
   logging: false,
   dialectOptions: {
-    ssl: true,
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
   },
   define: {
     timestamps: true,
